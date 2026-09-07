@@ -1,0 +1,10 @@
+Conto Shopping Starter
+Copyright 2026 Conto Finance, Inc.
+
+Includes modifications to Claude Commerce Agents by Anthropic PBC,
+licensed under Apache License 2.0. Original copyright and SPDX notices
+are retained on modified upstream files. See UPSTREAM.md for provenance.
+
+The Conto hosted service is a separate dependency and is not included
+in this source distribution. Anthropic and Claude names identify upstream
+technology and do not imply endorsement.

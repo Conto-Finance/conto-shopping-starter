@@ -1,0 +1,27 @@
+{
+  "users": [
+    {
+      "user_id": "demo-user",
+      "display_name": "Demo shopper",
+      "loyalty_tier": "ACME demo member",
+      "default_location": "Maple Heights",
+      "preferences": {
+        "spending": "usually keeps to the mid-range options",
+        "home": "two-bedroom apartment, no outdoor storage",
+        "household": "two adults and a school-age child",
+        "pet": "large dog",
+        "style": "minimal, neutral colors"
+      }
+    },
+    {
+      "user_id": "demo-user-2",
+      "display_name": "Guest shopper",
+      "loyalty_tier": "Guest",
+      "default_location": "Springfield",
+      "preferences": {
+        "budget": "value-focused",
+        "interests": "trail running, weekend camping"
+      }
+    }
+  ]
+}
