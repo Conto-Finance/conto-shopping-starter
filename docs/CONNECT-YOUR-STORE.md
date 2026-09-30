@@ -1,10 +1,10 @@
-# Connect your store
+# Connect a buyer agent
 
-This starter fits a store whose application controls catalog data, cart state, and payment-session creation. The backend is the place where Conto can enforce a purchase decision. Shopping across third-party sites would require a different execution integration.
+This starter is a sandbox fixture with a fictional catalog and merchant-owned Stripe test checkout. To build a supported Conto integration, put policy evaluation in the buyer's agent runtime and require authorization at its payment executor. The agent owner or budget holder sets policy; merchant catalog data, offers, and checkout details supply transaction information only. Follow the [buyer-side architecture](https://conto.finance/docs/guides/buyer-side-control) and verify the capabilities of your chosen payment path.
 
 ## Start at the checkout handoff
 
-Read `AnthropicShoppingRetail.checkout_handoff` in `overlay/examples/retail/api/main.py`. It converts the authoritative cart into `StagedCart`, asks the gateway to stage and authorize it, then returns a `CheckoutHandoff` to the conversation. The following is the core pattern, inside a backend that owns `self.conto`:
+Read `AnthropicShoppingRetail.checkout_handoff` in `overlay/examples/retail/api/main.py`. It converts the authoritative cart into `StagedCart`, asks the gateway to stage and authorize it, then returns a `CheckoutHandoff` to the conversation. The following is the fixture handoff, inside a backend that owns `self.conto`; it is not a buyer payment executor:
 
 ```python
 from shopping_agent import CheckoutHandoff
@@ -34,13 +34,13 @@ Run `./dev setup` to reapply source changes. The full upstream runtime is a depe
 
 ## Replace the merchant and account model
 
-The sample uses a fictional ACME merchant and session-scoped merchant addresses for its testnet authorization context. Changing a display name is not enough to connect a real merchant. Replace that provisioning in `conto_control_plane.py` with your Conto counterparty relationship, wallet context, and business identity mapping. Also review the ACME names used in `main.py` and Stripe line-item labels in `conto_checkout.py`.
+The sample uses a fictional ACME merchant and generated addresses for its testnet authorization context. Its resource provisioning, policy mutation, and visitor self-approval live in `demo/control_plane.py` and require explicit `CONTO_SANDBOX_DEMO_ENABLED=true`. Replace that entire demo account model with buyer-owned agents, authorized payment sources, and the recipient identity from the actual transaction. A merchant does not install Conto, call its policy APIs, or approve the buyer's spending.
 
-Map your authenticated shopper/session to an appropriate Conto agent and define who owns its budget. Restrict organization-level policy changes to authorized administrators. Replace the demo's owner approval action with your approval workflow. Keep privileged Conto and Stripe keys off the browser and the Claude tool interface.
+Map the authenticated buyer to its own Conto agent and budget holder. Restrict policy changes to authorized buyer administrators and resolve review through owner-authorized approvers. Keep administration credentials separate from agent runtime credentials, and hold signing or payment credentials in a buyer executor that cannot be bypassed by the agent. A merchant request cannot select approvers, relax policy, or release funds; Conto Pay recipient profiles and request links are optional conveniences.
 
 ## Keep authorization separate from payment
 
-Reuse the gateway pattern: a server-bound purchase gets an allow, review, or deny decision before the application creates a payment session. After payment, verify the provider's result and match the checkout ID, fingerprint, amount, and currency before recording success. Keep the completion path idempotent for duplicate webhooks and retries.
+Reuse the decision sequence: bind amount, currency, recipient, and material purchase details, then obtain allow, review, or deny before the buyer executor signs or uses payment credentials. Denied and unresolved requests must never execute. Changing the transaction requires a fresh authorization. An unrestricted signer can bypass a precheck; the merchant-owned Stripe adapter in this fixture does not implement this buyer boundary. After payment, verify the provider's result and match the checkout ID, fingerprint, amount, and currency before recording success. Keep the completion path idempotent for duplicate webhooks and retries.
 
 The supplied Stripe adapter intentionally rejects live keys. Moving to real payments requires an explicit production implementation: authenticated approval roles, policy revocation behavior, concurrent budget reservations, fulfillment, refunds, and reconciliation. Do not remove the test-key guard as a shortcut to production.
 
@@ -49,8 +49,8 @@ The supplied Stripe adapter intentionally rejects live keys. Moving to real paym
 | File | Your likely change |
 | --- | --- |
 | `overlay/examples/retail/api/main.py` | Connect your shopping backend and stage the final cart |
-| `overlay/examples/retail/api/conto_control_plane.py` | Map identity, merchant relationship, policies, and spend accounting |
-| `overlay/examples/retail/api/conto_checkout.py` | Keep the decision boundary; adapt provider completion and order handling |
+| `overlay/examples/retail/api/demo/control_plane.py` | Replace demo administration with buyer identity, policy ownership, and authorized approvals |
+| `overlay/examples/retail/api/conto_checkout.py` | Study the fixture lifecycle; implement and verify your buyer executor separately |
 | `overlay/examples/retail/api/production_store.py` | Use persistence appropriate to your deployment |
 | `overlay/examples/retail/storefront-web/` | Fit shopping and control surfaces into your app |
 | `tests/` | Add your store's purchase and failure cases |

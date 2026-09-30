@@ -36,7 +36,7 @@ from .conto_checkout import (
     StagedCart,
     create_checkout_router,
 )
-from .conto_control_plane import ContoControlError, ControlUpdate
+from .demo.control_plane import ContoControlError, ControlUpdate
 from .merchant import create_merchant_router
 from .mock_retail import DATA_DIR, MockRetail
 from .production_store import UpstashSessionCarts, UpstashSessionStore

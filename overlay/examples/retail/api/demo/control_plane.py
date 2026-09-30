@@ -446,7 +446,13 @@ class ContoSessionManager:
         default_limits: dict[str, float] | None = None,
         hard_limits: dict[str, float] | None = None,
         provisioning_namespace: str = "",
+        sandbox_demo_enabled: bool = False,
     ) -> None:
+        if sandbox_demo_enabled is not True:
+            raise ContoControlError(
+                "Sandbox demo administration is disabled. Set CONTO_SANDBOX_DEMO_ENABLED=true "
+                "only with an isolated sandbox organization and dedicated testnet wallet."
+            )
         self._admin = admin
         self._store = store
         self._box = secrets_box
@@ -461,6 +467,11 @@ class ContoSessionManager:
 
     @classmethod
     def from_env(cls) -> "ContoSessionManager":
+        if os.getenv("CONTO_SANDBOX_DEMO_ENABLED") != "true":
+            raise ContoControlError(
+                "Sandbox demo administration is disabled. Set CONTO_SANDBOX_DEMO_ENABLED=true "
+                "only with an isolated sandbox organization and dedicated testnet wallet."
+            )
         base_url = os.getenv("CONTO_API_URL", "https://conto.finance")
         return cls(
             JsonTransport(os.environ["CONTO_ORG_API_KEY"], base_url),
@@ -474,6 +485,7 @@ class ContoSessionManager:
             default_limits=_limits_from_env("DEMO_DEFAULT_LIMITS", DEFAULT_LIMITS),
             hard_limits=_limits_from_env("DEMO_HARD_LIMITS", HARD_WALLET_LIMITS),
             provisioning_namespace=os.getenv("DEMO_VERTICAL_NAMESPACE", ""),
+            sandbox_demo_enabled=True,
         )
 
     def _session_key(self, session_id: str) -> str:

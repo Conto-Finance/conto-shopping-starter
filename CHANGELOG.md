@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.1 — 2026-09-29
+
+Demo administration now requires explicit sandbox opt-in before API clients are constructed, including when starting the hosted API directly. Provisioning, policy edits, and visitor approvals are isolated in `api/demo/control_plane.py`. The README and technical guides distinguish the merchant-owned Stripe fixture from a buyer-side execution integration. Existing installations must explicitly set `CONTO_SANDBOX_DEMO_ENABLED=true` for an isolated sandbox organization and dedicated testnet wallet.
+
+The original blog remains unchanged as a historical 0.1.0 article. This update does not add a production buyer executor or change the storefront design.
+
 ## 0.1.0 — 2026-09-07
 
 Initial developer preview of Conto Shopping Starter: one shopping storefront, Conto purchase authorization, and Stripe test checkout. Includes portable setup and diagnostics, a catalog adaptation guide, checkout regression tests, and the bundled technical introduction.

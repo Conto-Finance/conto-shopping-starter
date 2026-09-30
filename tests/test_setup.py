@@ -34,6 +34,7 @@ class SetupTests(unittest.TestCase):
         errors = " ".join(config_errors(env))
         self.assertIn("test-mode", errors)
         self.assertNotIn(env["STRIPE_TEST_SECRET_KEY"], errors)
+        env["CONTO_SANDBOX_DEMO_ENABLED"] = "true"
         env["STRIPE_TEST_SECRET_KEY"] = "sk_test_example"
         self.assertEqual(config_errors(env), [])
         env["VERCEL"] = "1"

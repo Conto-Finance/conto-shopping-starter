@@ -23,9 +23,9 @@ from typing import Any, Protocol
 from starlette.requests import Request
 
 try:  # Package import in the app; direct import in the small unit-test harness.
-    from .conto_control_plane import ContoControlError, ContoSessionManager
+    from .demo.control_plane import ContoControlError, ContoSessionManager
 except ImportError:  # pragma: no cover - exercised by scripts/test.sh
-    from conto_control_plane import ContoControlError, ContoSessionManager
+    from demo.control_plane import ContoControlError, ContoSessionManager
 
 
 logger = logging.getLogger("anthropic_shopping.checkout")

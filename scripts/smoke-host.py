@@ -11,6 +11,7 @@ from fastapi.testclient import TestClient
 root = Path(__file__).resolve().parents[1]
 runtime = root / ".runtime" / "commerce-agents"
 os.environ.update({
+    "CONTO_SANDBOX_DEMO_ENABLED": "true",
     "ANTHROPIC_API_KEY": "test-key", "CONTO_ORG_API_KEY": "conto_test",
     "CONTO_SHARED_WALLET_ID": "wallet_test", "CONTO_OWNER_MEMBERSHIP_ID": "owner_test",
     "SHOPPING_SESSION_ENCRYPTION_KEY": "test-only-session-secret",

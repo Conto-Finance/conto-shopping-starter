@@ -1,6 +1,6 @@
 # Follow one shopping checkout
 
-Use one cart throughout this walkthrough. Ask Claude for a camping tent under $250, add the selected product, and note its actual total. The catalog is fictional; recommendation wording and the selected product can vary.
+Use one cart throughout this walkthrough. Ask Claude for a camping tent under $250, add the selected product, and note its actual total. This opt-in sandbox fixture uses merchant-owned Stripe test credentials and does not implement a buyer payment executor. The catalog is fictional; recommendation wording and the selected product can vary.
 
 ## Exercise the three outcomes
 
@@ -30,4 +30,4 @@ The backend may reject an obviously blocked cart during its policy checks before
 
 The adapter gates creation of a Stripe Checkout Session. Existing approved checkout sessions can be reused, so changing policy after a checkout URL is issued does not currently invalidate that URL. A production adaptation needs a deliberate strategy for session expiration, revocation, concurrent budget reservations, and reconciliation. Do not promise that the demo kill switch cancels a checkout already open at Stripe.
 
-The visitor's ability to approve or edit policy is for testing. Replace it with authenticated roles before accepting real purchases. Test mode does not fulfill an order or move money from the Conto wallet.
+The visitor's ability to approve or edit policy is for testing. A buyer integration must replace it with authenticated budget-owner roles and an executor that withholds signing or credentials until authorization; adding authentication to a merchant checkout alone does not establish that boundary. Test mode does not fulfill an order or move money from the Conto wallet.

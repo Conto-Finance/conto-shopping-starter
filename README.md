@@ -1,12 +1,12 @@
 # Conto Shopping Starter
 
-**Build a Claude shopping assistant with spending controls and an authorized checkout.**
+**Explore Claude shopping, Conto policy evaluation, and Stripe test checkout in a sandbox fixture.**
 
-A developer starter for teams that own a store's catalog and checkout backend. Claude helps a shopper find products and build a cart. Conto checks the purchase against spending limits, merchant permissions, and approval rules before the backend opens Stripe Checkout.
+A developer preview for studying a shopping conversation and purchase-policy decisions. Claude helps a shopper find fictional products and build a cart. The fixture calls Conto before creating a merchant-owned Stripe test checkout; this demonstrates policy evaluation and a test checkout handoff, not control over the buyer's payment credentials.
 
-Start with a working shopping app, follow the checkout code, then connect your own catalog. This is an independent Conto integration built on Anthropic's [Claude Commerce Agents](https://github.com/anthropics/commerce-agents) retail template.
+Conto belongs in the buyer's agent runtime, payment tools, or signing environment, where the agent owner sets policy and the buyer's executor withholds signing or credentials until authorization. Merchants supply transaction details and receive payment through supported rails. Start with this fixture, then follow the buyer integration guide. This is an independent Conto integration built on Anthropic's [Claude Commerce Agents](https://github.com/anthropics/commerce-agents) retail template.
 
-[Technical introduction](blog/introducing-conto-shopping-starter.md) · [Try the shopping demo](https://conto.finance/demos/claude/retail) · [Setup](docs/SETUP.md) · [Connect your store](docs/CONNECT-YOUR-STORE.md) · [Checkout walkthrough](docs/CHECKOUT.md)
+[Original 0.1.0 article (historical fixture)](blog/introducing-conto-shopping-starter.md) · [Try the shopping demo](https://conto.finance/demos/claude/retail) · [Setup](docs/SETUP.md) · [Buyer integration guide](docs/CONNECT-YOUR-STORE.md) · [Checkout walkthrough](docs/CHECKOUT.md)
 
 ## Run it
 
@@ -18,7 +18,8 @@ Clone the repository and run:
 git clone https://github.com/Conto-Finance/conto-shopping-starter.git
 cd conto-shopping-starter
 ./dev setup
-# Fill in the five account values in the generated .env.
+# Fill in the five sandbox account values in the generated .env.
+# Set CONTO_SANDBOX_DEMO_ENABLED=true only for your isolated sandbox.
 ./dev doctor
 ./dev start
 ```
@@ -56,7 +57,7 @@ Claude selects products -> backend builds authoritative cart
                                           verify and record payment
 ```
 
-Conto approves permission to spend. Stripe processes the payment, and the shopper supplies payment details on Stripe's hosted page. This starter does not execute a wallet transfer or provide autonomous purchasing on unrelated merchant websites.
+This diagram describes the fixture only. Stripe processes a test payment using details supplied by the shopper on its hosted page. The merchant-side session gate does not establish a buyer-side execution boundary. The starter neither executes a wallet transfer nor provides autonomous purchasing on unrelated merchant websites; supported buyer paths are described in the [canonical architecture](https://conto.finance/docs/guides/buyer-side-control).
 
 ## What you get
 
@@ -66,7 +67,7 @@ Conto approves permission to spend. Stripe processes the payment, and the shoppe
 - Local setup diagnostics, checkout regressions, a storefront build, and GitHub Actions configuration.
 - An adaptation guide and a single-store deployment configuration.
 
-The main integration is `checkout_handoff` in [`overlay/examples/retail/api/main.py`](overlay/examples/retail/api/main.py). [`conto_checkout.py`](overlay/examples/retail/api/conto_checkout.py) owns the checkout lifecycle; [`conto_control_plane.py`](overlay/examples/retail/api/conto_control_plane.py) calls Conto. [Connect your store](docs/CONNECT-YOUR-STORE.md) explains what to replace and what to preserve.
+The main integration is `checkout_handoff` in [`overlay/examples/retail/api/main.py`](overlay/examples/retail/api/main.py). [`conto_checkout.py`](overlay/examples/retail/api/conto_checkout.py) owns the checkout lifecycle; [`demo/control_plane.py`](overlay/examples/retail/api/demo/control_plane.py) contains opt-in demo provisioning, policy mutation, and visitor approval handling. [Buyer integration guide](docs/CONNECT-YOUR-STORE.md) explains what to replace and what to preserve.
 
 ## Developer commands
 
@@ -83,6 +84,6 @@ Make application changes in `overlay/`; `./dev setup` reapplies them to `.runtim
 
 ## Developer preview
 
-The demo intentionally lets its visitor edit policies and exercise approvals. Production applications must restrict these actions to authenticated budget owners and approvers. Fulfillment, refunds, resource cleanup, and operational reconciliation remain application work. Authorization is checked before creating a checkout session; this preview does not claim continuous policy enforcement after a Stripe checkout URL has been issued or aggregate budget guarantees across concurrent purchases.
+The demo is disabled by default. Setting `CONTO_SANDBOX_DEMO_ENABLED=true` explicitly enables resource provisioning, visitor policy edits, and self-approval; use only an isolated sandbox organization and dedicated testnet wallet. This setting acknowledges demo behavior and does not verify the account or wallet remotely. A buyer integration must replace these fixture actions with authenticated budget-owner administration and independently authorized approvals, and gate its own executor. A merchant offer or checkout cannot change buyer policy or authorize release of buyer funds. Fulfillment, refunds, resource cleanup, and operational reconciliation remain application work. Authorization is checked before creating a checkout session; this preview does not claim continuous policy enforcement after a Stripe checkout URL has been issued or aggregate budget guarantees across concurrent purchases.
 
 This starter is licensed under Apache-2.0; see [LICENSE](LICENSE) and [upstream attribution](UPSTREAM.md). The hosted Conto service is a separate dependency. Claude and Anthropic names identify upstream technology and do not imply endorsement.

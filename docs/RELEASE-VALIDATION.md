@@ -1,3 +1,9 @@
+# 0.1.1 validation
+
+The 2026-09-29 hardening update passes 49 Python tests, three JavaScript routing tests, pinned-upstream contract checks, and retail and standalone-host smoke checks. New regressions verify that missing or malformed sandbox opt-in fails before credentialed clients or storage are constructed, while explicit opt-in enables the fixture. All automated service calls use mocks or fake credentials.
+
+This update does not repeat the connected 0.1.0 sandbox purchase below, deploy the hosted demo, or validate a production buyer executor. The blog and storefront design are unchanged.
+
 # 0.1.0 validation
 
 A fresh source extraction was installed and exercised with existing dedicated sandbox accounts on 2026-09-07. This checked the download/setup path and connected shopping flow; it was not a new-customer signup test.

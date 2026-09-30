@@ -15,13 +15,13 @@ Run `./dev setup` with Git, Python 3.11+, Node 22+, and npm installed. The scrip
 
 [Request Conto starter access](https://conto.finance/contact) and ask for the organization key, owner membership ID, and a dedicated testnet wallet suitable for the example's policy limits. The code currently uses a wallet-backed Conto payment request with `autoExecute: false` to obtain an authorization decision. That is why a wallet ID is needed even though Stripe performs checkout.
 
-Fill in the five account values, then run `./dev doctor`. It checks required values, Stripe test-key format, encryption-key length, URL format, and paired KV settings. It does not verify that remote accounts or credentials work.
+Fill in the five account values for an isolated sandbox organization and dedicated testnet wallet, explicitly set `CONTO_SANDBOX_DEMO_ENABLED=true`, then run `./dev doctor`. It checks the explicit demo opt-in, required values, Stripe test-key format, encryption-key length, URL format, and paired KV settings. It does not verify that remote accounts or credentials work.
 
 ## Start and validate
 
 Run `./dev start`, then visit http://localhost:3000. Free ports 8000 and 3000 first; the launcher stops if they are occupied so checkout return URLs stay predictable. `SHOPPING_AGENT_ORIGIN` defaults to the API origin, http://localhost:8000. The frontend launcher supplies its API URL separately.
 
-The first connected shopping session can create resources in your configured Conto organization. Use a dedicated sandbox organization or resources agreed during onboarding. Local state is held in memory and resets with the process; your hosted Conto resources are separate and are not automatically deleted by stopping the app.
+The first connected shopping session can create resources in your configured Conto organization. Use a dedicated sandbox organization with no production resources. The opt-in flag acknowledges provisioning, visitor policy changes, and self-approval; it does not remotely verify account isolation or wallet network. Without it, the API refuses to initialize its demo control plane before constructing API clients. Local state is held in memory and resets with the process; your hosted Conto resources are separate and are not automatically deleted by stopping the app.
 
 ## Troubleshooting
 

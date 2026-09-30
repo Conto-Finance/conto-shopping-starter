@@ -15,7 +15,7 @@ from conto_checkout import (
     create_checkout_router,
     verify_stripe_signature,
 )
-from conto_control_plane import (
+from demo.control_plane import (
     ContoControlError,
     ContoSession,
     ContoSessionManager,
@@ -724,7 +724,7 @@ class ControlTests(unittest.TestCase):
         store = MemoryKeyValueStore()
         admin = FakeTransport()
         manager = ContoSessionManager(
-            admin, store, SecretBox("test-secret"), wallet_id="wallet"
+            admin, store, SecretBox("test-secret"), wallet_id="wallet", sandbox_demo_enabled=True
         )
         session = ContoSession(
             session_id="s",
@@ -772,7 +772,7 @@ class ControlTests(unittest.TestCase):
         store = MemoryKeyValueStore()
         admin = RejectingWalletTransport()
         manager = ContoSessionManager(
-            admin, store, SecretBox("test-secret"), wallet_id="wallet"
+            admin, store, SecretBox("test-secret"), wallet_id="wallet", sandbox_demo_enabled=True
         )
         session = ContoSession(
             session_id="s",
@@ -809,7 +809,7 @@ class ControlTests(unittest.TestCase):
 
         store = MemoryKeyValueStore()
         manager = ProvisioningSessionManager(
-            FakeTransport(), store, SecretBox("test-secret"), wallet_id="wallet"
+            FakeTransport(), store, SecretBox("test-secret"), wallet_id="wallet", sandbox_demo_enabled=True
         )
 
         for index in range(20):

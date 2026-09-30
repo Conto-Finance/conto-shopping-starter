@@ -4,13 +4,13 @@ The generated Vercel configuration contains one Next.js storefront and one FastA
 
 1. Run `./dev test` and `./dev build`.
 2. Run `./dev prepare-deploy`; deploy the generated directory it prints as a separate Vercel project.
-3. Configure the six server values from `.env.example`, including your generated encryption key. Also configure `KV_REST_API_URL`, `KV_REST_API_TOKEN`, and `SHOPPING_AGENT_ORIGIN=https://YOUR-SHOPPING-DOMAIN`.
+3. Configure the six credential/configuration values from `.env.example`, including your generated encryption key, and explicitly set `CONTO_SANDBOX_DEMO_ENABLED=true` for an isolated sandbox organization and dedicated testnet wallet. Also configure `KV_REST_API_URL`, `KV_REST_API_TOKEN`, and `SHOPPING_AGENT_ORIGIN=https://YOUR-SHOPPING-DOMAIN`.
 4. Register one Stripe test webhook at `https://YOUR-SHOPPING-DOMAIN/api/conto/stripe/webhook` for `checkout.session.completed` and `checkout.session.async_payment_succeeded`. Set its matching `STRIPE_WEBHOOK_SECRET` and redeploy.
 5. Verify streamed chat, controls, blocked/reviewed/allowed purchases, Stripe return URLs, webhook retries, and persistent order/cart state using your test accounts.
 
 Serve this starter at the root of its own domain. Leave `NEXT_PUBLIC_API_URL` unset for the hosted storefront so browser API calls use the same origin. No `NEXT_PUBLIC_DEMO_DEPLOY` or `DEMO_PUBLIC_ORIGIN` configuration is used.
 
-Hosted state uses KV adapters; local state uses memory. Use an isolated KV store and Conto resources for the preview. Changing the encryption key while sessions are active invalidates their encrypted credentials.
+Hosted state uses KV adapters; local state uses memory. Use an isolated KV store and Conto sandbox organization for the preview. The opt-in enables visitor policy edits and self-approval; this is not a production deployment or buyer payment executor. Changing the encryption key while sessions are active invalidates their encrypted credentials.
 
 The webhook signing secret is captured by the gateway at startup. A missing or mismatched secret fails signature validation. Verify actual event delivery with Stripe; a mocked test cannot confirm deployment credentials or routing. Conto authorization does not itself mark Stripe payment complete.
 

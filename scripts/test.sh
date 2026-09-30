@@ -46,6 +46,7 @@ PY
 
   (
     cd "$RUNTIME_ROOT"
+    CONTO_SANDBOX_DEMO_ENABLED=true \
     ANTHROPIC_API_KEY=test-key \
     CONTO_ORG_API_KEY=conto_test \
     CONTO_SHARED_WALLET_ID=wallet_test \

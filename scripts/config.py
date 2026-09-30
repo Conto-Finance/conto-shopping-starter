@@ -17,6 +17,8 @@ def load_config(root=ROOT):
 
 def config_errors(env):
     errors = [f"{name}: missing" for name in REQUIRED if not env.get(name, "").strip()]
+    if env.get("CONTO_SANDBOX_DEMO_ENABLED") != "true":
+        errors.append("CONTO_SANDBOX_DEMO_ENABLED: set to true only for an isolated sandbox organization and dedicated testnet wallet")
     stripe = env.get("STRIPE_TEST_SECRET_KEY", "").strip()
     if stripe and not stripe.startswith("sk_test_"):
         errors.append("STRIPE_TEST_SECRET_KEY: use a Stripe test-mode secret key")
